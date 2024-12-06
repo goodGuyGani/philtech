@@ -1,15 +1,13 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
-import { ShoppingCart, Plus, Minus, Sun, Moon } from 'lucide-react'
+import { ShoppingCart, Plus, Minus } from 'lucide-react'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
-import { Badge } from "@/components/ui/badge"
 import { Toaster } from "@/components/ui/toaster"
 import { useToast } from '@/hooks/use-toast'
-import { Switch } from "@/components/ui/switch"
 
 // Shopping Cart Context
 interface CartItem {
@@ -51,6 +49,14 @@ const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   useEffect(() => {
     localStorage.setItem('cart', JSON.stringify(cart))
   }, [cart])
+
+  useEffect(() => {
+    const savedCart = localStorage.getItem('cart')
+    if (savedCart) {
+      setCart(JSON.parse(savedCart))
+    }
+  }, [])
+
 
   const addToCart = (item: CartItem) => {
     setCart(prevCart => {
@@ -133,7 +139,6 @@ function StorePage() {
   const [error, setError] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('All')
-  const [darkMode, setDarkMode] = useState(false)
   const { cart, addToCart, removeFromCart, clearCart, getCartTotal } = useShoppingCart()
   const { toast } = useToast()
 
@@ -217,9 +222,6 @@ function StorePage() {
     clearCart()
   }
 
-  if (loading) return <div className="text-center p-8">Loading products...</div>
-  if (error) return <div className="text-center text-red-500 p-8">{error}</div>
-
   return (
     <div className="container max-w-5xl mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-8">
@@ -254,7 +256,22 @@ function StorePage() {
         </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredProducts.map((product) => (
+        {loading ? (
+          [...Array(6)].map((_, index) => (
+            <Card key={index} className="animate-pulse">
+              <CardHeader>
+                <div className="h-4 bg-gray-300 rounded w-3/4"></div>
+              </CardHeader>
+              <CardContent>
+                <div className="h-3 bg-gray-200 rounded w-full mb-2"></div>
+                <div className="h-3 bg-gray-200 rounded w-2/3"></div>
+              </CardContent>
+              <CardFooter>
+                <div className="h-10 bg-gray-300 rounded w-full"></div>
+              </CardFooter>
+            </Card>
+          ))
+        ) : filteredProducts.map((product) => (
           <Card key={product.id} className="flex flex-col">
             <CardHeader>
               <CardTitle>{product.label}</CardTitle>
@@ -272,7 +289,7 @@ function StorePage() {
           </Card>
         ))}
       </div>
-      {filteredProducts.length === 0 && (
+      {filteredProducts.length === 0 && !loading && (
         <p className="text-center text-gray-500 mt-8">No products found.</p>
       )}
       <Sheet>
@@ -286,35 +303,36 @@ function StorePage() {
           <SheetHeader>
             <SheetTitle>Shopping Cart</SheetTitle>
           </SheetHeader>
-          {cart.length === 0 ? (
-            <p className="text-center text-gray-500 mt-4">Your cart is empty.</p>
-          ) : (
-            <>
-              {cart.map((item) => (
-                <div key={item.id} className="flex justify-between items-center py-2">
+          <div>
+            {cart.length === 0 ? (
+              <p>Your cart is empty.</p>
+            ) : (
+              cart.map(item => (
+                <div key={item.id} className="flex justify-between items-center mb-4">
                   <div>
-                    <p className="font-semibold">{item.name}</p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">₱{item.price.toFixed(2)} x {item.quantity}</p>
+                    <h2 className="text-lg">{item.name}</h2>
+                    <p>₱{item.price.toFixed(2)}</p>
                   </div>
-                  <div className="flex items-center">
-                    <Button variant="outline" size="icon" onClick={() => removeFromCart(item.id)}>
+                  <div className="flex items-center space-x-2">
+                    <Button size="sm" variant="outline" onClick={() => removeFromCart(item.id)}>
                       <Minus className="h-4 w-4" />
                     </Button>
-                    <span className="mx-2">{item.quantity}</span>
-                    <Button variant="outline" size="icon" onClick={() => addToCart(item)}>
+                    <span>{item.quantity}</span>
+                    <Button size="sm" variant="outline" onClick={() => addToCart(item)}>
                       <Plus className="h-4 w-4" />
                     </Button>
                   </div>
                 </div>
-              ))}
-              <div className="mt-4 border-t pt-4">
-                <p className="font-bold text-lg">Total: ₱{getCartTotal().toFixed(2)}</p>
-                <Button className="w-full mt-4" onClick={handleCheckout}>Checkout</Button>
-                <Button variant="outline" className="w-full mt-2" onClick={clearCart}>
-                  Clear Cart
-                </Button>
-              </div>
-            </>
+              ))
+            )}
+          </div>
+          {cart.length > 0 && (
+            <div>
+              <p className="text-right font-bold text-lg mb-4">
+                Total: ₱{getCartTotal().toFixed(2)}
+              </p>
+              <Button className="w-full" onClick={handleCheckout}>Checkout</Button>
+            </div>
           )}
         </SheetContent>
       </Sheet>
@@ -323,8 +341,7 @@ function StorePage() {
   )
 }
 
-// Main Export
-export default function Store() {
+export default function App() {
   return (
     <ShoppingCartProvider>
       <StorePage />

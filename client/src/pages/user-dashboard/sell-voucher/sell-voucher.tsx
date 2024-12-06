@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
 import {
-  Card,
   CardContent,
   CardDescription,
   CardFooter,
@@ -19,23 +18,12 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/hooks/use-toast";
-import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import ThemeSwitch from "@/components/theme-switcher";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Wifi, Tv, Satellite } from "lucide-react";
+import { Wifi, Tv, Satellite, Phone, CreditCard, PhilippinePeso } from "lucide-react";
 import { useParams } from "react-router-dom";
 
 const SellVoucher = () => {
-  const [selectedUser, setSelectedUser] = useState("");
   const [selectedProduct, setSelectedProduct] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [email, setEmail] = useState("");
@@ -105,7 +93,7 @@ const SellVoucher = () => {
 
       <main className="container mx-auto py-6">
         <Tabs defaultValue="gsat" className="w-full">
-          <TabsList className="grid w-full max-w-md mx-auto grid-cols-3 mb-6">
+        <TabsList className="grid w-full mx-auto grid-cols-6 mb-6">
             <TabsTrigger
               value="gsat"
               onClick={() => setCurrentVoucher("GSAT Voucher")}
@@ -129,6 +117,30 @@ const SellVoucher = () => {
             >
               <Tv className="w-4 h-4" />
               TV
+            </TabsTrigger>
+            <TabsTrigger
+              value="telco"
+              onClick={() => setCurrentVoucher("Telco Voucher")}
+              className="flex items-center justify-center gap-2"
+            >
+              <Phone className="w-4 h-4" />
+              Telco
+            </TabsTrigger>
+            <TabsTrigger
+              value="bills"
+              onClick={() => setCurrentVoucher("Bills Payment")}
+              className="flex items-center justify-center gap-2"
+            >
+              <PhilippinePeso className="w-4 h-4" />
+              Bills
+            </TabsTrigger>
+            <TabsTrigger
+              value="cashIn"
+              onClick={() => setCurrentVoucher("Cash-in")}
+              className="flex items-center justify-center gap-2"
+            >
+              <CreditCard className="w-4 h-4" />
+              Cash-in
             </TabsTrigger>
           </TabsList>
           <TabsContent value="gsat">
@@ -306,6 +318,51 @@ const SellVoucher = () => {
               </CardContent>
               <CardFooter>
                 <Button className="w-full">Subscribe to TV Package</Button>
+              </CardFooter>
+            </div>
+          </TabsContent>
+          <TabsContent value="telco">
+            <div>
+              <CardHeader>
+                <CardTitle>Telco E-load Subscription Management</CardTitle>
+                <CardDescription>
+                  Manage your Telco E-load subscriptions and packages here.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4 flex flex-col justify-center items-center">
+              <h1 className="text-4xl mt-10">Coming soon..</h1>
+              </CardContent>
+              <CardFooter>
+              </CardFooter>
+            </div>
+          </TabsContent>
+          <TabsContent value="bills">
+            <div>
+              <CardHeader>
+                <CardTitle>Bills Payment Management</CardTitle>
+                <CardDescription>
+                  Manage your bill payment and packages here.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4 flex flex-col justify-center items-center">
+                <h1 className="text-4xl mt-10">Coming soon..</h1>
+              </CardContent>
+              <CardFooter>
+              </CardFooter>
+            </div>
+          </TabsContent>
+          <TabsContent value="cashIn">
+            <div>
+              <CardHeader>
+                <CardTitle>Cash-in Management</CardTitle>
+                <CardDescription>
+                  Manage your cash-in payment and packages here.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4 flex flex-col justify-center items-center">
+                <h1 className="text-4xl mt-10">Coming soon..</h1>
+              </CardContent>
+              <CardFooter>
               </CardFooter>
             </div>
           </TabsContent>

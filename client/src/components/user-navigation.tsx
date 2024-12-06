@@ -16,7 +16,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 export function NavigationMenuDemo() {
   const navigate = useNavigate();
-  const { userId } = useParams();
+  const userId = useParams().userId;
 
   const components = [
     {
@@ -71,7 +71,7 @@ export function NavigationMenuDemo() {
 
               <ListItem
                 title="Genealogy"
-                onClick={() => handleNavigation("/docs/installation")}
+                onClick={() => handleNavigation(`/user-dashboard/${userId}/user-geneleogy`)}
               >
                 A guide to installing dependencies and setting up the app's file
                 structure.

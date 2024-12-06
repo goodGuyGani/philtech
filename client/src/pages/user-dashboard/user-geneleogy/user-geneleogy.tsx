@@ -543,9 +543,7 @@ export default function UserGeneleogyTree() {
           <Breadcrumb>
             <BreadcrumbList>
               <BreadcrumbItem>
-                <BreadcrumbLink href="#">Report</BreadcrumbLink>
               </BreadcrumbItem>
-              <BreadcrumbSeparator />
               <BreadcrumbItem>
                 <BreadcrumbPage>Genealogy Tree</BreadcrumbPage>
               </BreadcrumbItem>
