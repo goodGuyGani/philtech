@@ -10,6 +10,10 @@ import BuyingTest from "./pages/buying-test";
 import UserDashboardLayout from "./pages/user-dashboard/user-dashboard-layout";
 import UserDashboardMain from "./pages/user-dashboard/user-dashboard-main";
 import SubscriptionPageMain from "./pages/user-dashboard/subscription-page/subscription-page-main";
+import SellVoucher from "./pages/user-dashboard/sell-voucher/sell-voucher";
+import SoldVoucher from "./pages/user-dashboard/sold-voucher/sold-voucher-main";
+import UserGeneleogyTree from "./pages/user-dashboard/user-geneleogy/user-geneleogy";
+import Store from "./pages/user-dashboard/user-store/user-store";
 
 function App() {
   return (
@@ -26,11 +30,13 @@ function App() {
           <Route path="/dashboard/buying-test" element={<BuyingTest />} />
         </Route>
         <Route
-          path="/user-dashboard/:userId"
-          element={<UserDashboardLayout />}
-        >
+          path="/user-dashboard/:userId" element={<UserDashboardLayout />}>
           <Route path="/user-dashboard/:userId" element={<UserDashboardMain />} />
           <Route path="/user-dashboard/:userId/subscription-packages" element={<SubscriptionPageMain />} />
+          <Route path="/user-dashboard/:userId/sell-voucher" element={<SellVoucher />} />
+          <Route path="/user-dashboard/:userId/sold-voucher" element={<SoldVoucher />} />
+          <Route path="/user-dashboard/:userId/user-geneleogy" element={<UserGeneleogyTree />} />
+          <Route path="/user-dashboard/:userId/store" element={<Store />} />
         </Route>
       </Routes>
     </Router>

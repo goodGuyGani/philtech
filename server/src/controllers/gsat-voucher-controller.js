@@ -27,6 +27,24 @@ const getAllGsatVouchers = async (req, res) => {
   }
 };
 
+const getGsatVoucherByUserId = async (req, res) => {
+  const user_id = req.params.user_id;
+
+  try {
+    const userVouchers = await prisma.pt_gsat_voucher.findMany({
+      where: {
+        owned_by: parseInt(user_id),
+      },
+    });
+
+    res.status(200).json(userVouchers);
+  } catch (error) {
+    console.error("Error fetching vouchers by user ID:", error);
+    res.status(500).json({ error: "Failed to fetch vouchers for the specified user" });
+  }
+};
+
+
 const sendEmail = async (toEmail, emailBody) => {
   const transporter = nodemailer.createTransport({
     service: "gmail",
@@ -85,7 +103,7 @@ const buyGsatVoucher = async (user_id, product_code, email, stocks) => {
       const updatedVoucher = await prisma.pt_gsat_voucher.update({
         where: { gsat_voucher_id: voucher.gsat_voucher_id },
         data: {
-          owned_by: user_id,
+          owned_by: parseInt(user_id),
           used_date: new Date(),
         },
       });
@@ -205,4 +223,4 @@ const buyGsatVoucher = async (user_id, product_code, email, stocks) => {
   }
 };
 
-module.exports = { createGsatVouchers, getAllGsatVouchers, buyGsatVoucher };
+module.exports = { createGsatVouchers, getAllGsatVouchers, buyGsatVoucher, getGsatVoucherByUserId };

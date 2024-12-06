@@ -338,6 +338,24 @@
         }
       }
     },
+    "/api/gsat-voucher-by-user-id/{user_id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/api/upload-wifi-vouchers": {
       "post": {
         "description": "",
