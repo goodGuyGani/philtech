@@ -29,6 +29,8 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
+import { useNavigate } from "react-router-dom"
+import { useUserContext } from "@/hooks/use-user" // Import useUserContext
 
 export function NavUser({
   user,
@@ -40,6 +42,13 @@ export function NavUser({
   }
 }) {
   const { isMobile } = useSidebar()
+  const { clearUser } = useUserContext() // Get the clearUser function from the context
+  const navigate = useNavigate()
+
+  const handleLogout = () => {
+    clearUser() // Clear user data and token
+    navigate("/") // Redirect to the login page
+  }
 
   return (
     <SidebarMenu>
@@ -102,7 +111,7 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={handleLogout}> {/* Handle logout click */}
               <LogOut />
               Log out
             </DropdownMenuItem>

@@ -7,6 +7,9 @@ const doc = {
     },
     host: 'philtech-backend-api.onrender.com',
     schemes: ['https'],
+    // host: 'localhost:5000',
+    // schemes: ['http'],
+    
 };
 
 const outputFile = '../swagger-output.json';

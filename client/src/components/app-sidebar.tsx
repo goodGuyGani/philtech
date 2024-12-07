@@ -7,11 +7,8 @@ import {
   Wallet,
   Users,
 } from "lucide-react";
-
 import { IconSitemap } from "@tabler/icons-react";
-
 import { IconReport } from "@tabler/icons-react";
-
 import { NavMain } from "@/components/nav-main";
 import { NavUser } from "@/components/nav-user";
 import { TeamSwitcher } from "@/components/team-switcher";
@@ -22,14 +19,10 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
+import { useUserContext } from "@/hooks/use-user";
 
 // Sample data with updated icons
 const data = {
-  user: {
-    name: "Admin",
-    email: "admin@philtech.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
   teams: [
     {
       name: "Acme Inc",
@@ -134,26 +127,22 @@ const data = {
       ],
     },
   ],
-  // projects: [
-  //   {
-  //     name: "Design Engineering",
-  //     url: "#",
-  //     icon: TerminalSquare,
-  //   },
-  //   {
-  //     name: "Sales & Marketing",
-  //     url: "#",
-  //     icon: DollarSign,
-  //   },
-  //   {
-  //     name: "Travel",
-  //     url: "#",
-  //     icon: AudioWaveform,
-  //   },
-  // ],
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { user } = useUserContext(); // Accessing the user from context
+console.log(user);
+  // Dynamically set user data based on context
+  const userData = user ? {
+    name: user.name,
+    email: user.email,
+    avatar: user.avatar || "/avatars/default-avatar.png", // If avatar is not available, use a default one
+  } : {
+    name: "Guest",
+    email: "guest@example.com",
+    avatar: "/avatars/default-avatar.png",
+  };
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -163,7 +152,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavMain items={data.navMain} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={userData} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

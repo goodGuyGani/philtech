@@ -14,14 +14,17 @@ import SellVoucher from "./pages/user-dashboard/sell-voucher/sell-voucher";
 import SoldVoucher from "./pages/user-dashboard/sold-voucher/sold-voucher-main";
 import UserGeneleogyTree from "./pages/user-dashboard/user-geneleogy/user-geneleogy";
 import Store from "./pages/user-dashboard/user-store/user-store";
+import SignIn from "./pages/auth/sign-in";
+import SignUp from "./pages/auth/sign-up";
 
 function App() {
   return (
     <Router>
       <Routes>
-        {/* <Route path="/" element={<h1>Hello</h1>} /> */}
-        <Route path="/" element={<DashboardLayout />}>
-          <Route path="/" element={<DashboardMain />} />
+        <Route path="/" element={<SignIn />} />
+        <Route path="/sign-up" element={<SignUp />} />
+        <Route path="/dashboard" element={<DashboardLayout />}>
+          <Route path="/dashboard" element={<DashboardMain />} />
           <Route path="/dashboard/atm-report" element={<AtmMain />} />
           <Route path="/dashboard/wifi-voucher" element={<WifiMain />} />
           <Route path="/dashboard/tv-voucher" element={<TelevisionMain />} />

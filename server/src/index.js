@@ -1,9 +1,13 @@
 const express = require("express");
 const { getVouchers } = require("../controllers/getRequest");
 const { createVouchers } = require("../query/postRequest");
-const { createAtmTransactions } = require("./controllers/atm-transaction-controller");
+const {
+  createAtmTransactions,
+} = require("./controllers/atm-transaction-controller");
 const { createTvVouchers } = require("./controllers/tv-voucher-controller");
-const { getSubscriptionData } = require("./controllers/subscription-meta-controller");
+const {
+  getSubscriptionData,
+} = require("./controllers/subscription-meta-controller");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const bodyParser = require("body-parser");
@@ -15,17 +19,20 @@ const distributorRoutes = require("./routes/distributor");
 const wifiVoucherRoutes = require("./routes/wifi-voucher");
 const AtmTransactionRoutes = require("./routes/atm-transaction");
 const tvVoucherRoutes = require("./routes/tv-voucher");
-const gsatVoucherRoutes = require("./routes/gsat-voucher")
-const subscriptionPackageRoutes = require("./routes/subscription-package")
+const gsatVoucherRoutes = require("./routes/gsat-voucher");
+const subscriptionPackageRoutes = require("./routes/subscription-package");
 const userRoutes = require("./routes/user");
-const invitationCodeRoutes = require('./routes/invitation-code');
-const subscriptionMetaRoutes = require('./routes/subscription-meta');
+const invitationCodeRoutes = require("./routes/invitation-code");
+const subscriptionMetaRoutes = require("./routes/subscription-meta");
+const authRoutes = require("./routes/auth");
 
-const { createGsatVouchers, buyGsatVoucher } = require("./controllers/gsat-voucher-controller");
-const bcrypt = require('bcrypt');
-const { PrismaClient } = require('@prisma/client');
+const {
+  createGsatVouchers,
+  buyGsatVoucher,
+} = require("./controllers/gsat-voucher-controller");
+const bcrypt = require("bcrypt");
+const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
-
 
 dotenv.config();
 
@@ -38,7 +45,12 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use(
   cors({
-    origin: ["http://localhost:3000", "http://localhost:5173", "http://philtechbetamain.local", "https://philtech.vercel.app"],
+    origin: [
+      "http://localhost:3000",
+      "http://localhost:5173",
+      "http://philtechbetamain.local",
+      "https://philtech.vercel.app",
+    ],
     methods: ["GET", "POST", "DELETE", "HEAD", "PUT", "PATCH"],
     credentials: true,
   })
@@ -46,6 +58,9 @@ app.use(
 
 //api-docs
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+//Auth
+app.use("/api", authRoutes);
 
 //Users
 app.use("/api", userRoutes);
@@ -67,13 +82,13 @@ app.use("/api", tvVoucherRoutes);
 app.use("/api", AtmTransactionRoutes);
 
 //Subscription packages
-app.use("/api", subscriptionPackageRoutes)
+app.use("/api", subscriptionPackageRoutes);
 
 //Invitation code
-app.use('/api', invitationCodeRoutes);
+app.use("/api", invitationCodeRoutes);
 
 //Subscription meta
-app.get('/subscription-meta/:id', async (req, res) => {
+app.get("/subscription-meta/:id", async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -81,38 +96,19 @@ app.get('/subscription-meta/:id', async (req, res) => {
 
     // Handle case where no data is found
     if (!subscriptionData || Object.keys(subscriptionData).length === 0) {
-      return res.status(404).json({ error: 'Subscription not found' });
+      return res.status(404).json({ error: "Subscription not found" });
     }
 
     res.json(subscriptionData);
   } catch (error) {
-    console.error('Error fetching subscription data:', error);
-    res.status(500).json({ error: 'An error occurred while retrieving the data' });
+    console.error("Error fetching subscription data:", error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while retrieving the data" });
   }
 });
 
-
-
-
-// app.post("/buy-gsat-vouchers", async (req, res) => {
-//   const { user_id, product } = req.body;
-
-//   if (!user_id || !product) {
-//     return res.status(400).json({ error: "User ID and product code are required." });
-//   }
-
-//   try {
-//     const updatedVoucher = await buyGsatVoucher(user_id, product);
-//     res.status(200).json({
-//       message: "Voucher successfully assigned.",
-//       updatedVoucher,
-//     });
-//   } catch (error) {
-//     res.status(500).json({ error: error.message });
-//   }
-// });
-
-app.get('/api/invitation-code/:code', async (req, res) => {
+app.get("/api/invitation-code/:code", async (req, res) => {
   const { code } = req.params;
 
   try {
@@ -122,22 +118,30 @@ app.get('/api/invitation-code/:code', async (req, res) => {
     });
 
     if (!invitation || !invitation.user_id) {
-      return res.status(404).json({ error: 'Invitation code not found or invalid' });
+      return res
+        .status(404)
+        .json({ error: "Invitation code not found or invalid" });
     }
 
     const userLine = await prisma.wp_users.findFirst({
       where: { ID: invitation.user_id },
-    })
+    });
 
     // Return the user ID of the code owner
-    res.status(200).json({ user_id: invitation.user_id, user_level: userLine.user_level });
+    res
+      .status(200)
+      .json({ user_id: invitation.user_id, user_level: userLine.user_level });
   } catch (error) {
-    console.error('Error fetching invitation code owner:', error);
-    res.status(500).json({ error: 'An error occurred while fetching the invitation code owner' });
+    console.error("Error fetching invitation code owner:", error);
+    res
+      .status(500)
+      .json({
+        error: "An error occurred while fetching the invitation code owner",
+      });
   }
 });
 
-app.post('/api/register-users', async (req, res) => {
+app.post("/api/register-users", async (req, res) => {
   const { user_login, user_pass, user_email } = req.body;
 
   function parseUserData(data) {
@@ -146,23 +150,31 @@ app.post('/api/register-users', async (req, res) => {
       user_pass: data.user_pass,
       user_email: data.user_email,
       display_name: data.display_name || data.user_login,
-      user_role: data.user_role || 'subscriber',
+      user_role: data.user_role || "subscriber",
       user_level: data.user_level ? parseInt(data.user_level, 10) : 0,
       user_referral_code: data.user_referral_code || null,
-      user_referred_by_id: data.user_referred_by_id ? parseInt(data.user_referred_by_id, 10) : null,
-      user_upline_id: data.user_referred_by_id ? parseInt(data.user_referred_by_id, 10) : null,
+      user_referred_by_id: data.user_referred_by_id
+        ? parseInt(data.user_referred_by_id, 10)
+        : null,
+      user_upline_id: data.user_referred_by_id
+        ? parseInt(data.user_referred_by_id, 10)
+        : null,
       user_credits: data.user_credits ? parseFloat(data.user_credits) : 0,
       user_nicename: data.user_nicename || data.user_login,
-      user_url: data.user_url || '',
-      user_registered: data.user_registered ? new Date(data.user_registered) : new Date(),
-      user_activation_key: data.user_activation_key || '',
+      user_url: data.user_url || "",
+      user_registered: data.user_registered
+        ? new Date(data.user_registered)
+        : new Date(),
+      user_activation_key: data.user_activation_key || "",
       user_status: data.user_status ? parseInt(data.user_status, 10) : 0,
     };
   }
 
   // Basic validation
   if (!user_login || !user_pass || !user_email) {
-    return res.status(400).json({ error: 'Username, password, and email are required.' });
+    return res
+      .status(400)
+      .json({ error: "Username, password, and email are required." });
   }
 
   try {
@@ -182,8 +194,8 @@ app.post('/api/register-users', async (req, res) => {
 
     res.status(201).json(newUser);
   } catch (error) {
-    console.error('Error creating user:', error);
-    res.status(500).json({ error: 'An error occurred while saving the user' });
+    console.error("Error creating user:", error);
+    res.status(500).json({ error: "An error occurred while saving the user" });
   }
 });
 
@@ -234,22 +246,21 @@ app.post('/api/register-users', async (req, res) => {
 //   }
 // });
 
-
-
 app.put("/api/buy-gsat-voucher", async (req, res) => {
   const { user_id, product_code, email, stocks } = req.body;
 
   try {
-    const assignedVouchers = await buyGsatVoucher(user_id, product_code, email, stocks);
+    const assignedVouchers = await buyGsatVoucher(
+      user_id,
+      product_code,
+      email,
+      stocks
+    );
     res.status(200).json(assignedVouchers);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
-
-
-
-
 
 app.get("/vouchers", async (req, res) => {
   try {
@@ -344,8 +355,6 @@ app.post("/upload-tv-voucher", async (req, res) => {
     res.status(500).json({ error: "Failed to process voucher data" });
   }
 });
-
-
 
 // Start server
 app.listen(port, () => {
