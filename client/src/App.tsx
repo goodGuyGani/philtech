@@ -19,9 +19,9 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<h1>Hello</h1>} />
-        <Route path="/dashboard" element={<DashboardLayout />}>
-          <Route path="/dashboard" element={<DashboardMain />} />
+        {/* <Route path="/" element={<h1>Hello</h1>} /> */}
+        <Route path="/" element={<DashboardLayout />}>
+          <Route path="/" element={<DashboardMain />} />
           <Route path="/dashboard/atm-report" element={<AtmMain />} />
           <Route path="/dashboard/wifi-voucher" element={<WifiMain />} />
           <Route path="/dashboard/tv-voucher" element={<TelevisionMain />} />
