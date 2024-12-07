@@ -21,6 +21,7 @@ const SignIn = () => {
     email: "",
     password: "",
   });
+  const [loading, setLoading] = useState(false); // State to track loading
 
   // Check if user is already logged in and redirect accordingly
   useEffect(() => {
@@ -40,6 +41,8 @@ const SignIn = () => {
 
   const loginUser = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    setLoading(true); // Set loading to true when starting the request
     try {
       const response = await axiosInstance.post("/api/auth/login", {
         email: data.email,
@@ -84,6 +87,8 @@ const SignIn = () => {
           variant: "destructive",
         });
       }
+    } finally {
+      setLoading(false); // Set loading to false once the request is complete
     }
   };
 
@@ -142,11 +147,11 @@ const SignIn = () => {
               />
             </div>
             <Button
-              disabled={!isRecaptchaVerified}
+              disabled={loading || !isRecaptchaVerified} // Disable button while loading
               type="submit"
               className="w-full bg-foreground mt-4"
             >
-              Sign In
+              {loading ? "Signing In..." : "Sign In"} {/* Show loading text */}
             </Button>
           </form>
           <div className="mt-4 text-center">

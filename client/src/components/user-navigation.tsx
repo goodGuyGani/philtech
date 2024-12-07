@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import { IconLabel } from "@tabler/icons-react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useUserContext } from "@/hooks/use-user"; // Import the user context
 
 export function NavigationMenuDemo() {
   const navigate = useNavigate();
@@ -33,9 +34,21 @@ export function NavigationMenuDemo() {
     },
   ];
 
-  const handleNavigation = (path: string) => {
+/*************  ✨ Codeium Command ⭐  *************/
+  /**
+   * Navigate to a given route when a navigation item is clicked.
+   * @param {string} path - The route path to navigate to.
+   */
+/******  458a0b5e-3dda-445b-8aa1-71f7b87c266a  *******/  const handleNavigation = (path: string) => {
     navigate(path);
   };
+
+  const { clearUser } = useUserContext()
+
+  const handleLogout = () => {
+    clearUser() // Clear user data and token
+    navigate("/") // Redirect to the login page
+  }
 
   return (
     <NavigationMenu>
@@ -118,6 +131,15 @@ export function NavigationMenuDemo() {
             onClick={() => handleNavigation("/vouchers")}
           >
             Settings
+          </NavigationMenuLink>
+        </NavigationMenuItem>
+        {/* Logout Item */}
+        <NavigationMenuItem className="cursor-pointer">
+          <NavigationMenuLink
+            className={navigationMenuTriggerStyle()}
+            onClick={handleLogout}
+          >
+            Log Out
           </NavigationMenuLink>
         </NavigationMenuItem>
       </NavigationMenuList>
