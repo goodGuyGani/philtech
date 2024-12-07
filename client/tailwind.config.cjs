@@ -1,33 +1,22 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-	// Enable dark mode with the "class" strategy
 	darkMode: ["class"],
-  
-	// Specify the files Tailwind should scan for class names
 	content: [
-	  "./pages/**/*.{ts,tsx}",    // Include TypeScript pages
-	  "./components/**/*.{ts,tsx}", // Include TypeScript components
-	  "./app/**/*.{ts,tsx}",      // Include TypeScript app folder
-	  "./src/**/*.{ts,tsx}",      // Include TypeScript src folder
+	  './pages/**/*.{ts,tsx}',
+	  './components/**/*.{ts,tsx}',
+	  './app/**/*.{ts,tsx}',
+	  './src/**/*.{ts,tsx}',
 	],
-  
-	// Add a prefix to avoid class name conflicts (empty by default)
 	prefix: "",
-  
-	// Configure theme settings
 	theme: {
-	  // Default container configuration
 	  container: {
-		center: true, // Center-align container
-		padding: "2rem", // Default padding
+		center: true,
+		padding: "2rem",
 		screens: {
-		  "2xl": "1400px", // Define max width for large screens
+		  "2xl": "1400px",
 		},
 	  },
-  
-	  // Extend the default theme
 	  extend: {
-		// Add custom colors with CSS variable support
 		colors: {
 		  border: "hsl(var(--border))",
 		  input: "hsl(var(--input))",
@@ -63,15 +52,11 @@ module.exports = {
 			foreground: "hsl(var(--card-foreground))",
 		  },
 		},
-  
-		// Add custom border radius sizes
 		borderRadius: {
 		  lg: "var(--radius)",
 		  md: "calc(var(--radius) - 2px)",
 		  sm: "calc(var(--radius) - 4px)",
 		},
-  
-		// Add custom animations and keyframes
 		keyframes: {
 		  "accordion-down": {
 			from: { height: "0" },
@@ -88,10 +73,5 @@ module.exports = {
 		},
 	  },
 	},
-  
-	// Include plugins
-	plugins: [
-	  require("tailwindcss-animate"), // Tailwind plugin for animations
-	],
-  };
-  
+	plugins: [require("tailwindcss-animate")],
+  }
