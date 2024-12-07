@@ -61,7 +61,7 @@ export function TransactionChart() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/get-atm-transaction');
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/get-atm-transaction`);
         setTransactionData(response.data);
       } catch (error) {
         console.error("Failed to fetch ATM transactions:", error);
@@ -124,7 +124,7 @@ export function UserChart() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/users');
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/users`);
         setUserData(response.data);
       } catch (error) {
         console.error("Failed to fetch user data:", error);

@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import { toast } from "@/hooks/use-toast";
 import useAxiosInstance from "@/lib/axios-instance";
 import ReCAPTCHA from "react-google-recaptcha";
+import { Loader } from "lucide-react"; // Import the loader icon from lucide-react
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -153,7 +154,7 @@ const SignIn = () => {
             >
               {loading ? (
                 <div className="flex justify-center items-center space-x-2">
-                  <div className="w-4 h-4 border-2 border-t-2 border-blue-500 rounded-full animate-spin" />
+                  <Loader className="animate-spin text-white" size={24} /> {/* Rotating circle from Lucide */}
                   <span>Signing In...</span>
                 </div>
               ) : (

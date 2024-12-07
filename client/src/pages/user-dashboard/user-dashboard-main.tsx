@@ -48,7 +48,7 @@ export default function UserDashboardMain() {
     const fetchProfile = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/users/${userId}`
+          `${import.meta.env.VITE_BASE_URL}/api/users/${userId}`
         )
         setProfile(response.data)
         setLoading(false)
