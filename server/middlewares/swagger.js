@@ -6,7 +6,7 @@ const doc = {
         description: 'PhilTech INC. API Information',
     },
     host: 'https://philtech-backend-api.onrender.com',
-    schemes: ['http'],
+    schemes: ['https'],
 };
 
 const outputFile = '../swagger-output.json';
