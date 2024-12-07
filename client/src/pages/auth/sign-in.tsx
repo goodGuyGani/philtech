@@ -151,7 +151,14 @@ const SignIn = () => {
               type="submit"
               className="w-full bg-foreground mt-4"
             >
-              {loading ? "Signing In..." : "Sign In"} {/* Show loading text */}
+              {loading ? (
+                <div className="flex justify-center items-center space-x-2">
+                  <div className="w-4 h-4 border-2 border-t-2 border-blue-500 rounded-full animate-spin" />
+                  <span>Signing In...</span>
+                </div>
+              ) : (
+                "Sign In"
+              )}
             </Button>
           </form>
           <div className="mt-4 text-center">
