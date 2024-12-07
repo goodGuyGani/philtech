@@ -20,13 +20,11 @@ const subscriptionPackageRoutes = require("./routes/subscription-package")
 const userRoutes = require("./routes/user");
 const invitationCodeRoutes = require('./routes/invitation-code');
 const subscriptionMetaRoutes = require('./routes/subscription-meta');
-const dns = require('dns');
-
-const discoveryHostname = process.env.RENDER_DISCOVERY_SERVICE;
 
 const { createGsatVouchers, buyGsatVoucher } = require("./controllers/gsat-voucher-controller");
 const bcrypt = require('bcrypt');
 const { PrismaClient } = require('@prisma/client');
+const dns = require('dns');
 const prisma = new PrismaClient();
 
 
@@ -46,6 +44,8 @@ app.use(
     credentials: true,
   })
 );
+
+const discoveryHostname = process.env.RENDER_DISCOVERY_SERVICE;
 
 //api-docs
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
@@ -348,28 +348,28 @@ app.post("/upload-tv-voucher", async (req, res) => {
   }
 });
 
-// IP Lookup
+function fetchAndPrintIPs(req, res) {
+  if (!discoveryHostname) {
+    return res.status(400).json({ error: 'DISCOVERY_SERVICE environment variable is not set.' });
+  }
 
-function fetchAndPrintIPs() {
-
-  // Perform DNS lookup
-  // all: true returns all IP addresses for the given hostname
-  // family: 4 returns IPv4 addresses
   dns.lookup(discoveryHostname, { all: true, family: 4 }, (err, addresses) => {
     if (err) {
       console.error('Error resolving DNS:', err);
-      return;
+      return res.status(500).json({ error: 'Failed to resolve DNS.', details: err.message });
     }
-    // Map over results to extract just the IP addresses
+
+    // Map over results to extract IP addresses
     const ips = addresses.map(a => a.address);
     console.log(`IP addresses for ${discoveryHostname}: ${ips.join(', ')}`);
+    res.json({ hostname: discoveryHostname, ipAddresses: ips });
   });
 }
 
-
+// Add a route for DNS lookup
+app.get('/api/dns-lookup', fetchAndPrintIPs);
 
 // Start server
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
-  console.log(`Your IP address is ${discoveryHostname}`);
 });
