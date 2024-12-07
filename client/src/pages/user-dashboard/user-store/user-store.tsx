@@ -136,7 +136,7 @@ const categories = ['All', 'ATM', 'NETTV', 'WiFi']
 function StorePage() {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [, setError] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('All')
   const { cart, addToCart, removeFromCart, clearCart, getCartTotal } = useShoppingCart()

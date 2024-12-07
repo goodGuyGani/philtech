@@ -1,20 +1,7 @@
 import { NavigationMenuDemo } from "@/components/user-navigation";
-import React, { useState, useEffect } from "react";
-import { Outlet, useParams } from "react-router-dom";
-import axios from "axios";
+import { Outlet } from "react-router-dom";
 import Logo from "../../assets/complete_logo.png";
 import ThemeSwitch from "@/components/theme-switcher";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Progress } from "@/components/ui/progress";
-import { CreditCard, Package, User, Users } from 'lucide-react';
-import { IconUser } from "@tabler/icons-react";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
 

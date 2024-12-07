@@ -6,9 +6,6 @@ import {
 } from "@radix-ui/react-icons";
 import {
   IconColumns,
-  IconUsersPlus,
-  IconUserUp,
-  IconFileTypeCsv,
   IconDownload,
 } from "@tabler/icons-react";
 import {
@@ -45,7 +42,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { CSVLink } from "react-csv";
 import axios from "axios";
 import { parseISO, format } from "date-fns";
@@ -87,7 +84,6 @@ import {
   Trash2,
   User,
 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import {
   Popover,
   PopoverContent,
@@ -135,43 +131,20 @@ type TransactionHistory = {
   updatedAt: string;
 };
 
-interface TransactionInfoProps {
-  transaction: {
-    transactionId: string;
-    productCode: string;
-    amount: number;
-    discount: number;
-    merchantId: string;
-    status: string;
-    createdAt: string;
-    updatedAt: string;
-  };
-  onEdit: () => void;
-  onDelete: () => void;
-}
-
-const frameworks = [
-  {
-    value: "next.js",
-    label: "Next.js",
-  },
-  {
-    value: "sveltekit",
-    label: "SvelteKit",
-  },
-  {
-    value: "nuxt.js",
-    label: "Nuxt.js",
-  },
-  {
-    value: "remix",
-    label: "Remix",
-  },
-  {
-    value: "astro",
-    label: "Astro",
-  },
-];
+// interface TransactionInfoProps {
+//   transaction: {
+//     transactionId: string;
+//     productCode: string;
+//     amount: number;
+//     discount: number;
+//     merchantId: string;
+//     status: string;
+//     createdAt: string;
+//     updatedAt: string;
+//   };
+//   onEdit: () => void;
+//   onDelete: () => void;
+// }
 
 export default function TransactionHistoryTable({ setViewVoucher }: Props) {
 
@@ -182,11 +155,10 @@ export default function TransactionHistoryTable({ setViewVoucher }: Props) {
   const [position, setPosition] = useState("all");
 
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState("");
 
   const [data, setData] = useState<Voucher[]>([]);
 
-  const fuzzyFilter = (row: any, columnId: any, value: any, addMeta: any) => {
+  const fuzzyFilter = (row: any, columnId: any, value: any) => {
     const itemValue = row.getValue(columnId);
     return (
       typeof itemValue === "string" &&
@@ -202,14 +174,14 @@ export default function TransactionHistoryTable({ setViewVoucher }: Props) {
     setIfEditing(false);
   };
 
-  const [sorting, setSorting] = useState<SortingState>([]);
+  const [sorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = useState({});
+  const [columnVisibility] = useState<VisibilityState>({});
+  const [rowSelection] = useState({});
   const [getMerchants, setGetMerchants] = useState<any>([]);
-  const [getDistributors, setGetDistributors] = useState<any>([]);
+  const [, setGetDistributors] = useState<any>([]);
   const [selectedMerchant, setSelectedMerchant] = useState<any>();
 
   useEffect(() => {

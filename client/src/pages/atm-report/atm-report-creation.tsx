@@ -22,7 +22,6 @@ const AtmReportCreation = () => {
   const [fileName, setFileName] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [submitted, setSubmitted] = useState<boolean>(false);
-  const currentYear = new Date().getFullYear();
   const navigate = useNavigate();
 
   const onDrop = useCallback((acceptedFiles: File[]) => {

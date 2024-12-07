@@ -1,6 +1,4 @@
 import { Separator } from "@/components/ui/separator";
-import React from "react";
-import SubscriptionPageTable from "../subscription-page/subscription-page-table";
 import SoldVoucherTable from "./sold-voucher-table";
 
 const SoldVoucher = () => {

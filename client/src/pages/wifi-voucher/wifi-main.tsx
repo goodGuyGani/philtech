@@ -9,15 +9,14 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import React, { useState } from "react";
-import AtmReportTable from "../atm-report/atm-report-table";
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { IconDoorExit, IconHours24, IconUsersGroup } from "@tabler/icons-react";
 import { Link } from "react-router-dom";
 import WifiTable from "./wifi-table";
 
 const WifiMain = () => {
-  const [viewVoucher, setViewVoucher] = useState<any>([]);
+  const [, setViewVoucher] = useState<any>([]);
   return (
     <div className="max-w-screen">
       <header className="flex h-16 shrink-0 items-center justify-between gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">

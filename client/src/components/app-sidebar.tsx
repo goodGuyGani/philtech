@@ -1,17 +1,11 @@
 import * as React from "react";
 import {
-  AudioWaveform,
-  Book,
-  Bot,
-  CreditCard,
-  DollarSign,
   LayoutDashboard,
   Settings,
   ShoppingCart,
   Ticket,
   Wallet,
   Users,
-  TerminalSquare,
 } from "lucide-react";
 
 import { IconSitemap } from "@tabler/icons-react";
@@ -19,7 +13,6 @@ import { IconSitemap } from "@tabler/icons-react";
 import { IconReport } from "@tabler/icons-react";
 
 import { NavMain } from "@/components/nav-main";
-import { NavProjects } from "@/components/nav-projects";
 import { NavUser } from "@/components/nav-user";
 import { TeamSwitcher } from "@/components/team-switcher";
 import {

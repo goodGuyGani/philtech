@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
   CaretSortIcon,
-  ChevronDownIcon,
   DotsHorizontalIcon,
 } from "@radix-ui/react-icons";
 import {
@@ -31,8 +30,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -48,7 +45,7 @@ import {
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { CSVLink } from "react-csv";
 import axios from "axios";
-import { parseISO, format, parse } from "date-fns";
+import { parseISO, format } from "date-fns";
 import {
   Select,
   SelectContent,
@@ -97,7 +94,7 @@ export default function WifiTable({ setViewVoucher }: Props) {
   const [currentVoucherId, setCurrentVoucherId] = useState<number>(0);
   const [ifEditing, setIfEditing] = useState<boolean>(false);
   const [globalFilter, setGlobalFilter] = useState("");
-  const [position, setPosition] = useState("all");
+  // const [position, setPosition] = useState("all");
 
   const [data, setData] = useState<Voucher[]>([]);
 
@@ -113,7 +110,7 @@ export default function WifiTable({ setViewVoucher }: Props) {
       });
   }, []);
 
-  const fuzzyFilter = (row: any, columnId: any, value: any, addMeta: any) => {
+  const fuzzyFilter = (row: any, columnId: any, value: any) => {
     const itemValue = row.getValue(columnId);
     return (
       typeof itemValue === "string" &&

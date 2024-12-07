@@ -114,7 +114,7 @@ export default function GsatTable({ setViewVoucher }: Props) {
       });
   }, []);
 
-  const fuzzyFilter = (row: any, columnId: any, value: any, addMeta: any) => {
+  const fuzzyFilter = (row: any, columnId: any, value: any) => {
     const itemValue = row.getValue(columnId);
     return (
       typeof itemValue === "string" &&
@@ -130,12 +130,12 @@ export default function GsatTable({ setViewVoucher }: Props) {
     setIfEditing(false);
   };
 
-  const [sorting, setSorting] = useState<SortingState>([]);
+  const [sorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = useState({});
+  const [columnVisibility] = useState<VisibilityState>({});
+  const [rowSelection] = useState({});
 
   const handleEdit = () => {
     setIfEditing(!ifEditing);

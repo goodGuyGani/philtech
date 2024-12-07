@@ -31,8 +31,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -70,7 +68,6 @@ import { Separator } from "@/components/ui/separator";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Edit, Trash2 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import TelevisionCreation from "./tv-creation";
 import { AdvancedFilters } from "./advance-filter";
 import { Popover, PopoverContent } from "@radix-ui/react-popover";
@@ -100,9 +97,7 @@ export default function TelevisionTable({ setViewVoucher }: Props) {
   const [currentVoucherId, setCurrentVoucherId] = useState<number>(0);
   const [ifEditing, setIfEditing] = useState<boolean>(false);
   const [globalFilter, setGlobalFilter] = useState("");
-  const [position, setPosition] = useState("all");
   const [advancedFilters, setAdvancedFilters] = useState<any>({});
-  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
 
   const [data, setData] = useState<Voucher[]>([]);
 
@@ -118,7 +113,7 @@ export default function TelevisionTable({ setViewVoucher }: Props) {
       });
   }, []);
 
-  const fuzzyFilter = (row: any, columnId: any, value: any, addMeta: any) => {
+  const fuzzyFilter = (row: any, columnId: any, value: any) => {
     const itemValue = row.getValue(columnId);
     return (
       typeof itemValue === "string" &&
@@ -176,7 +171,7 @@ export default function TelevisionTable({ setViewVoucher }: Props) {
     []
   );
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = useState({});
+  const [rowSelection] = useState({});
   const applyAdvancedFilters = (filters: any) => {
     setAdvancedFilters(filters);
   };

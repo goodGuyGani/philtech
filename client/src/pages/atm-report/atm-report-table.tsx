@@ -57,11 +57,9 @@ import axios from "axios";
 import {
   parseISO,
   format,
-  addDays,
   isWithinInterval,
   startOfDay,
   endOfDay,
-  parse,
 } from "date-fns";
 import {
   Select,
@@ -94,7 +92,6 @@ import {
   ArrowUpDown,
   CalendarIcon,
   CreditCard,
-  DollarSign,
   Edit,
   PhilippinePeso,
   PoundSterlingIcon as PhilippinePesoIcon,
@@ -113,7 +110,6 @@ import { DateRange } from "react-day-picker";
 import { cn } from "@/lib/utils";
 import * as Slider from "@radix-ui/react-slider";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { AlertDialogFooter } from "@/components/ui/alert-dialog";
 
 interface Props {
   setViewVoucher: any;
@@ -131,7 +127,7 @@ export default function AtmReportTable({ setViewVoucher }: Props) {
   >("transaction_date");
   const [transactionTypes, setTransactionTypes] = useState<string[]>([]);
   const [amountRange, setAmountRange] = useState<[number, number]>([0, 100000]);
-  const [statusType, setStatusType] = useState<string>("");
+  const [, setStatusType] = useState<string>("");
   const [isOpen, setIsOpen] = useState(false);
 
   const handleConfirm = () => {
@@ -164,7 +160,7 @@ export default function AtmReportTable({ setViewVoucher }: Props) {
     setData(voucherData);
   };
 
-  const fuzzyFilter = (row: any, columnId: any, value: any, addMeta: any) => {
+  const fuzzyFilter = (row: any, columnId: any, value: any) => {
     const itemValue = row.getValue(columnId);
     return (
       typeof itemValue === "string" &&

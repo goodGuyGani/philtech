@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import {
@@ -16,7 +16,6 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import {
-  ArrowUpDown,
   ChevronDown,
   Eye,
   EyeOff,
@@ -140,12 +139,7 @@ const SoldVoucherTable = () => {
     {
       accessorKey: "status",
       header: "Status",
-      cell: ({ row }) => {
-        const status: any = row.getValue("status") || "Not Activated";
-        const isActive = status !== "Not Activated";
-        const badgeColor = isActive
-          ? "bg-green-100 text-green-800"
-          : "bg-yellow-100 text-yellow-800";
+      cell: ({ }) => {
 
         return <Badge >Sold</Badge>;
       },

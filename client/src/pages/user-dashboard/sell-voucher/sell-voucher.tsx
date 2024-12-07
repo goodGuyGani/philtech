@@ -28,7 +28,7 @@ const SellVoucher = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [email, setEmail] = useState("");
   const [stocks, setStocks] = useState(1);
-  const [currentVoucher, setCurrentVoucher] = useState("GSAT Voucher");
+  const [, setCurrentVoucher] = useState("GSAT Voucher");
   const userId = useParams().userId;
 
   const products = ["FG99", "G500"];

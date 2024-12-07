@@ -58,7 +58,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { Slider } from "@/components/ui/slider";
 import {
   Dialog,
   DialogContent,
@@ -67,7 +66,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -158,7 +157,6 @@ function buildHierarchy(users: User[]): CustomTreeNodeDatum {
 
 const stepPath = (linkData: LinkData, orientation: string): string => {
   const { source, target } = linkData;
-  const midX = (source.x + target.x) / 2;
   const midY = (source.y + target.y) / 2;
 
   if (orientation === "vertical") {
@@ -219,8 +217,8 @@ export default function GenealogyTree() {
   const [matchedUser, setMatchedUser] = useState<User | null>(null);
   const treeContainerRef = useRef<HTMLDivElement>(null);
   const [searchResults, setSearchResults] = useState<CustomTreeNodeDatum[]>([]);
-  const [selectedSearchResult, setSelectedSearchResult] =
-    useState<CustomTreeNodeDatum | null>(null);
+  // const [selectedSearchResult, setSelectedSearchResult] =
+  //   useState<CustomTreeNodeDatum | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showStatistics, setShowStatistics] = useState(false);
   const [isUserInfoDialogOpen, setIsUserInfoDialogOpen] = useState(false);

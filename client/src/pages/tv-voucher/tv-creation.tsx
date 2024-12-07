@@ -48,7 +48,7 @@ const TelevisionCreation = () => {
     ninthGen: 0,
     tenthGen: 0,
   });
-  const [ifAmountEditing, setIfAmountEditing] = useState<boolean>(false);
+  const [, setIfAmountEditing] = useState<boolean>(false);
   const [ifDialogOpen, setIfDialogOpen] = useState<any>();
   const navigate = useNavigate();
 
