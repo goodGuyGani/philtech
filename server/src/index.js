@@ -24,7 +24,6 @@ const subscriptionMetaRoutes = require('./routes/subscription-meta');
 const { createGsatVouchers, buyGsatVoucher } = require("./controllers/gsat-voucher-controller");
 const bcrypt = require('bcrypt');
 const { PrismaClient } = require('@prisma/client');
-const dns = require('dns');
 const prisma = new PrismaClient();
 
 
@@ -44,8 +43,6 @@ app.use(
     credentials: true,
   })
 );
-
-const discoveryHostname = process.env.RENDER_DISCOVERY_SERVICE;
 
 //api-docs
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
@@ -348,26 +345,7 @@ app.post("/upload-tv-voucher", async (req, res) => {
   }
 });
 
-function fetchAndPrintIPs(req, res) {
-  if (!discoveryHostname) {
-    return res.status(400).json({ error: 'DISCOVERY_SERVICE environment variable is not set.' });
-  }
 
-  dns.lookup(discoveryHostname, { all: true, family: 4 }, (err, addresses) => {
-    if (err) {
-      console.error('Error resolving DNS:', err);
-      return res.status(500).json({ error: 'Failed to resolve DNS.', details: err.message });
-    }
-
-    // Map over results to extract IP addresses
-    const ips = addresses.map(a => a.address);
-    console.log(`IP addresses for ${discoveryHostname}: ${ips.join(', ')}`);
-    res.json({ hostname: discoveryHostname, ipAddresses: ips });
-  });
-}
-
-// Add a route for DNS lookup
-app.get('/api/dns-lookup', fetchAndPrintIPs);
 
 // Start server
 app.listen(port, () => {
