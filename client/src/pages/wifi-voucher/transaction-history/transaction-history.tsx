@@ -1,10 +1,7 @@
 import { Separator } from "@/components/ui/separator";
-import { useScreenSize } from "@/hooks/screenSizeProvider";
-import MiniNav from "@/components/miniNav";
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
-  IconDoorExit,
   IconFilter,
   IconHours24,
   IconUsersGroup,
@@ -21,7 +18,6 @@ import { DateRange } from "react-day-picker";
 import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import TransactionHistoryTable from "./transaction-history-table";
 import WifiTransactionHistoryTable from "./transaction-history-table";
 
 interface Voucher {
@@ -36,8 +32,7 @@ interface Voucher {
 }
 
 const WifiTransactionHistory = ({ className }: React.HTMLAttributes<HTMLDivElement>) => {
-  const isSmallScreen = useScreenSize();
-  const [viewEVoucher, setViewVoucher] = useState<Voucher>({
+  const [, setViewVoucher] = useState<Voucher>({
     voucherId: 0, // Initialize with a default numeric value
     voucherCode: "", // Matches string type in the interface
     voucherAmount: 0, // Initialize with a default numeric value
@@ -55,7 +50,6 @@ const WifiTransactionHistory = ({ className }: React.HTMLAttributes<HTMLDivEleme
 
   return (
     <div className="main-content h-full w-full mt-5">
-      <MiniNav />
       <div className="flex flex-col w-full items-center">
         <div className="flex flex-col w-full max-w-9xl px-4 pt-6">
           <p className="text-3xl font-bold">Transaction History</p>
@@ -65,9 +59,7 @@ const WifiTransactionHistory = ({ className }: React.HTMLAttributes<HTMLDivEleme
           <Separator className="my-6" />
         </div>
         <div
-          className={`flex ${
-            !isSmallScreen ? "flex-row" : "flex-col gap-4"
-          } justify-between w-full px-4`}
+          className={`flex flex-col gap-4 justify-between w-full px-4`}
         >
           <p className="text-2xl font-bold">WiFi Voucher History</p>
           <div className="flex flex-row gap-2">

@@ -49,7 +49,6 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { CSVLink } from "react-csv";
 import axios from "axios";
 import { parseISO, format } from "date-fns";
-import { useScreenSize } from "@/hooks/screenSizeProvider";
 import {
   Select,
   SelectContent,
@@ -59,7 +58,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import VoucherCreation from "@/pages/gsat-voucher/voucher-creation";
 import {
   Sheet,
   SheetContent,
@@ -88,7 +86,6 @@ import {
   Trash2,
   User,
 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import {
   Popover,
   PopoverContent,
@@ -136,47 +133,24 @@ type TransactionHistory = {
   updatedAt: string;
 };
 
-interface TransactionInfoProps {
-  transaction: {
-    transactionId: string;
-    productCode: string;
-    amount: number;
-    discount: number;
-    merchantId: string;
-    status: string;
-    createdAt: string;
-    updatedAt: string;
-  };
-  onEdit: () => void;
-  onDelete: () => void;
-}
+// interface TransactionInfoProps {
+//   transaction: {
+//     transactionId: string;
+//     productCode: string;
+//     amount: number;
+//     discount: number;
+//     merchantId: string;
+//     status: string;
+//     createdAt: string;
+//     updatedAt: string;
+//   };
+//   onEdit: () => void;
+//   onDelete: () => void;
+// }
 
-const frameworks = [
-  {
-    value: "next.js",
-    label: "Next.js",
-  },
-  {
-    value: "sveltekit",
-    label: "SvelteKit",
-  },
-  {
-    value: "nuxt.js",
-    label: "Nuxt.js",
-  },
-  {
-    value: "remix",
-    label: "Remix",
-  },
-  {
-    value: "astro",
-    label: "Astro",
-  },
-];
 
 
 export default function WifiTransactionHistoryTable({ setViewVoucher }: Props) {
-  const isSmallScreen = useScreenSize();
 
   const [voucherData, setVoucherData] = useState<TransactionHistory[]>([]);
   const [currentVoucherId, setCurrentVoucherId] = useState<number>(0);
@@ -185,11 +159,10 @@ export default function WifiTransactionHistoryTable({ setViewVoucher }: Props) {
   const [position, setPosition] = useState("all");
 
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState("");
 
   const [data, setData] = useState<Voucher[]>([]);
 
-  const fuzzyFilter = (row: any, columnId: any, value: any, addMeta: any) => {
+  const fuzzyFilter = (row: any, columnId: any, value: any) => {
     const itemValue = row.getValue(columnId);
     return (
       typeof itemValue === "string" &&
@@ -205,14 +178,14 @@ export default function WifiTransactionHistoryTable({ setViewVoucher }: Props) {
     setIfEditing(false);
   };
 
-  const [sorting, setSorting] = useState<SortingState>([]);
+  const [sorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = useState({});
+  const [columnVisibility] = useState<VisibilityState>({});
+  const [rowSelection] = useState({});
   const [getMerchants, setGetMerchants] = useState<any>([]);
-  const [getDistributors, setGetDistributors] = useState<any>([]);
+  const [, setGetDistributors] = useState<any>([]);
   const [selectedMerchant, setSelectedMerchant] = useState<any>();
 
   useEffect(() => {
@@ -457,7 +430,6 @@ export default function WifiTransactionHistoryTable({ setViewVoucher }: Props) {
 
   return (
     <div className="w-full items-center justify-center">
-      {!isSmallScreen ? (
         <div className="flex items-center py-4">
           <Input
             placeholder="Filter vouchers..."
@@ -511,7 +483,7 @@ export default function WifiTransactionHistoryTable({ setViewVoucher }: Props) {
               </CSVLink>
             </Button>
             <DialogContent className="w-3/4 max-w-none">
-              <VoucherCreation />
+              {/* <VoucherCreation /> */}
             </DialogContent>
           </Dialog>
           <DropdownMenu>
@@ -586,7 +558,7 @@ export default function WifiTransactionHistoryTable({ setViewVoucher }: Props) {
                 </DropdownMenuContent>
               </DropdownMenu>
               <DialogContent className="w-3/4 max-w-none">
-                <VoucherCreation />
+                {/* <VoucherCreation /> */}
               </DialogContent>
             </Dialog>
             <DropdownMenu>
@@ -618,7 +590,6 @@ export default function WifiTransactionHistoryTable({ setViewVoucher }: Props) {
             </DropdownMenu>
           </div>
         </>
-      )}
       <div className="rounded-md border h-[calc(100vh-28rem)] overflow-auto no-scrollbar">
         <Table>
           <TableHeader>

@@ -1,10 +1,7 @@
 import { Separator } from "@/components/ui/separator";
-import { useScreenSize } from "@/hooks/screenSizeProvider";
-import MiniNav from "@/components/miniNav";
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
-  IconDoorExit,
   IconFilter,
   IconHours24,
   IconUsersGroup,
@@ -35,8 +32,7 @@ interface Voucher {
 }
 
 const TelevisionTransactionHistory = ({ className }: React.HTMLAttributes<HTMLDivElement>) => {
-  const isSmallScreen = useScreenSize();
-  const [viewEVoucher, setViewVoucher] = useState<Voucher>({
+  const [, setViewVoucher] = useState<Voucher>({
     voucherId: 0,
     voucherCode: "",
     voucherAmount: 0,
@@ -54,7 +50,6 @@ const TelevisionTransactionHistory = ({ className }: React.HTMLAttributes<HTMLDi
 
   return (
     <div className="main-content h-full w-full mt-5">
-      <MiniNav />
       <div className="flex flex-col w-full items-center">
         <div className="flex flex-col w-full max-w-9xl px-4 pt-6">
           <p className="text-3xl font-bold">Transaction History</p>
@@ -64,9 +59,7 @@ const TelevisionTransactionHistory = ({ className }: React.HTMLAttributes<HTMLDi
           <Separator className="my-6" />
         </div>
         <div
-          className={`flex ${
-            !isSmallScreen ? "flex-row" : "flex-col gap-4"
-          } justify-between w-full px-4`}
+          className={`flex flex-col gap-4 justify-between w-full px-4`}
         >
           <p className="text-2xl font-bold">TV Voucher History</p>
           <div className="flex flex-row gap-2">
