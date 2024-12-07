@@ -20,6 +20,9 @@ const subscriptionPackageRoutes = require("./routes/subscription-package")
 const userRoutes = require("./routes/user");
 const invitationCodeRoutes = require('./routes/invitation-code');
 const subscriptionMetaRoutes = require('./routes/subscription-meta');
+const dns = require('dns');
+
+const discoveryHostname = process.env.RENDER_DISCOVERY_SERVICE;
 
 const { createGsatVouchers, buyGsatVoucher } = require("./controllers/gsat-voucher-controller");
 const bcrypt = require('bcrypt');
@@ -345,9 +348,28 @@ app.post("/upload-tv-voucher", async (req, res) => {
   }
 });
 
+// IP Lookup
+
+function fetchAndPrintIPs() {
+
+  // Perform DNS lookup
+  // all: true returns all IP addresses for the given hostname
+  // family: 4 returns IPv4 addresses
+  dns.lookup(discoveryHostname, { all: true, family: 4 }, (err, addresses) => {
+    if (err) {
+      console.error('Error resolving DNS:', err);
+      return;
+    }
+    // Map over results to extract just the IP addresses
+    const ips = addresses.map(a => a.address);
+    console.log(`IP addresses for ${discoveryHostname}: ${ips.join(', ')}`);
+  });
+}
+
 
 
 // Start server
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
+  console.log(`Your IP address is ${discoveryHostname}`);
 });
