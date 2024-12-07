@@ -38,7 +38,7 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use(
   cors({
-    origin: ["http://localhost:3000", "http://localhost:5173", "http://philtechbetamain.local"],
+    origin: ["http://localhost:3000", "http://localhost:5173", "http://philtechbetamain.local", "https://philtech.vercel.app"],
     methods: ["GET", "POST", "DELETE", "HEAD", "PUT", "PATCH"],
     credentials: true,
   })
