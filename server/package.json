@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node src/index.js",
-    "dev": "nodemon src/index.js ./middlewares/swagger.js"
+    "start": "pnpm prisma:generate && node src/index.js",
+    "dev": "nodemon src/index.js ./middlewares/swagger.js",
+    "prisma:generate": "prisma generate"
   },
   "author": "CodePinasDev",
   "license": "ISC",
