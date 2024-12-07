@@ -5,7 +5,7 @@
     "description": "PhilTech INC. API Information",
     "version": "1.0.0"
   },
-  "host": "https://philtech-backend-api.onrender.com",
+  "host": "philtech-backend-api.onrender.com",
   "basePath": "/",
   "schemes": [
     "https"

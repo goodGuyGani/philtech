@@ -5,7 +5,7 @@ const doc = {
         title: 'PhilTech INC. API',
         description: 'PhilTech INC. API Information',
     },
-    host: 'https://philtech-backend-api.onrender.com',
+    host: 'philtech-backend-api.onrender.com',
     schemes: ['https'],
 };
 
