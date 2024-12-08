@@ -40,32 +40,45 @@ const generateCurrentDate = () => {
  * @param {Object} res - The Express response object.
  */
 const createInvitationCode = async (req, res) => {
-  const { package, amount, user_id } = req.body;
-  const code = generateInvitationCode();
+  const { packages, user_id } = req.body; // Accept an array of packages
   const datePurchased = generateCurrentDate();
 
-  try {
-    // Insert a new row into the database
-    const newCode = await prisma.wp_ihc_invitation_codes.create({
-      data: {
-        code,
-        package: package || null,
-        amount: parseFloat(amount) || null,
-        user_id: parseInt(user_id) || null,
-        date_purchased: datePurchased,
-      },
+  if (!Array.isArray(packages) || packages.length === 0) {
+    return res.status(400).json({
+      success: false,
+      message: 'Packages must be a non-empty array.',
     });
+  }
+
+  try {
+    // Generate and save multiple codes
+    const newCodes = await Promise.all(
+      packages.map(async (pkg) => {
+        const code = generateInvitationCode();
+        const { packageName, amount } = pkg; // Extract package-specific details
+
+        return await prisma.pt_invitation_codes.create({
+          data: {
+            code,
+            package: packageName || null,
+            amount: parseFloat(amount) || null,
+            user_id: parseInt(user_id) || null,
+            date_purchased: datePurchased,
+          },
+        });
+      })
+    );
 
     res.status(201).json({
       success: true,
-      message: 'Invitation code created successfully.',
-      data: newCode,
+      message: 'Invitation codes created successfully.',
+      data: newCodes,
     });
   } catch (error) {
-    console.error('Error creating invitation code:', error);
+    console.error('Error creating invitation codes:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to create invitation code.',
+      message: 'Failed to create invitation codes.',
       error: error.message,
     });
   }
@@ -81,7 +94,7 @@ const getInvitationCodeById = async (req, res) => {
 
   try {
     // Fetch the invitation code from the database
-    const invitationCode = await prisma.wp_ihc_invitation_codes.findUnique({
+    const invitationCode = await prisma.pt_invitation_codes.findUnique({
       where: {
         id: parseInt(id),
       },
@@ -115,18 +128,23 @@ const getInvitationCodeById = async (req, res) => {
  */
 const getInvitationCodeByUserId = async (req, res) => {
   const { user_id } = req.params;
+
+  if (!user_id || isNaN(parseInt(user_id))) {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid or missing user_id.",
+    });
+  }
+
   try {
-    // Fetch the invitation codes from the database
-    const invitationCodes = await prisma.wp_ihc_invitation_codes.findMany({
-      where: {
-        user_id: parseInt(user_id),
-      },
+    const invitationCodes = await prisma.pt_invitation_codes.findMany({
+      where: { user_id: parseInt(user_id) },
     });
 
-    if (invitationCodes.length === 0) {
+    if (!invitationCodes || invitationCodes.length === 0) {
       return res.status(404).json({
         success: false,
-        message: 'No invitation codes found for the given user_id.',
+        message: "No invitation codes found for the given user_id.",
       });
     }
 
@@ -135,15 +153,14 @@ const getInvitationCodeByUserId = async (req, res) => {
       data: invitationCodes,
     });
   } catch (error) {
-    console.error('Error fetching invitation codes:', error);
+    console.error("Error fetching invitation codes:", error);
     res.status(500).json({
       success: false,
-      message: 'Failed to fetch invitation codes.',
+      message: "Failed to fetch invitation codes.",
       error: error.message,
     });
   }
 };
-
 
 
 module.exports = {

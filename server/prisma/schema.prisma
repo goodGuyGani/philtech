@@ -1053,3 +1053,14 @@ model wp_litespeed_url_file {
   @@index([url_id, expired], map: "url_id")
   @@index([url_id, vary, type], map: "url_id_2")
 }
+
+model pt_invitation_codes {
+  id             Int       @id @default(autoincrement())
+  code           String?   @db.VarChar(250)
+  package        String?   @db.VarChar(250)
+  amount         Float?    @db.Float
+  user_id        Int?
+  redeemed_by    Int?
+  date_purchased String?   @db.VarChar(255)
+  created_at     DateTime? @default(now()) @db.DateTime(0)
+}

@@ -113,7 +113,7 @@ app.get("/api/invitation-code/:code", async (req, res) => {
 
   try {
     // Check if the invitation code exists
-    const invitation = await prisma.wp_ihc_invitation_codes.findFirst({
+    const invitation = await prisma.pt_invitation_codes.findFirst({
       where: { code },
     });
 
@@ -133,11 +133,9 @@ app.get("/api/invitation-code/:code", async (req, res) => {
       .json({ user_id: invitation.user_id, user_level: userLine.user_level });
   } catch (error) {
     console.error("Error fetching invitation code owner:", error);
-    res
-      .status(500)
-      .json({
-        error: "An error occurred while fetching the invitation code owner",
-      });
+    res.status(500).json({
+      error: "An error occurred while fetching the invitation code owner",
+    });
   }
 });
 
@@ -192,12 +190,19 @@ app.post("/api/register-users", async (req, res) => {
       data: userData,
     });
 
-    res.status(201).json(newUser);
+    // Respond with the registered user's ID
+    res.status(201).json({
+      userId: newUser.id, // Assuming `id` is the primary key field in your `wp_users` table
+      message: "User registered successfully.",
+    });
   } catch (error) {
     console.error("Error creating user:", error);
-    res.status(500).json({ error: "An error occurred while saving the user" });
+    res
+      .status(500)
+      .json({ error: "An error occurred while saving the user" });
   }
 });
+
 
 // app.post('/api/register-users', async (req, res) => {
 //   const {

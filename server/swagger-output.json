@@ -5,10 +5,10 @@
     "description": "PhilTech INC. API Information",
     "version": "1.0.0"
   },
-  "host": "philtech-backend-api.onrender.com",
+  "host": "localhost:5000",
   "basePath": "/",
   "schemes": [
-    "https"
+    "http"
   ],
   "paths": {
     "/subscription-meta/{id}": {
@@ -548,6 +548,9 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
           },
           "404": {
             "description": "Not Found"
