@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { Toaster } from "@/components/ui/toaster"
 import { useToast } from '@/hooks/use-toast'
+import { useUserContext } from '@/hooks/use-user'
 
 // Shopping Cart Context
 interface CartItem {
@@ -49,14 +50,6 @@ const ShoppingCartProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   useEffect(() => {
     localStorage.setItem('cart', JSON.stringify(cart))
   }, [cart])
-
-  useEffect(() => {
-    const savedCart = localStorage.getItem('cart')
-    if (savedCart) {
-      setCart(JSON.parse(savedCart))
-    }
-  }, [])
-
 
   const addToCart = (item: CartItem) => {
     setCart(prevCart => {
@@ -136,11 +129,13 @@ const categories = ['All', 'ATM', 'NETTV', 'WiFi']
 function StorePage() {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
-  const [, setError] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('All')
   const { cart, addToCart, removeFromCart, clearCart, getCartTotal } = useShoppingCart()
   const { toast } = useToast()
+  const [paymentMethod, setPaymentMethod] = useState('')
+
+  const { user } = useUserContext();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -201,31 +196,83 @@ function StorePage() {
           setLoading(false)
         }, 1000)
       } catch (err) {
-        setError('Failed to fetch products')
+        toast({
+          title: "Error",
+          description: "Failed to fetch products. Please try again later.",
+          variant: "destructive",
+        })
         setLoading(false)
       }
     }
 
     fetchProducts()
-  }, [])
+  }, [toast])
 
   const filteredProducts = products.filter(product =>
     product.label.toLowerCase().includes(searchTerm.toLowerCase()) &&
     (selectedCategory === 'All' || product.category === selectedCategory)
   )
 
-  const handleCheckout = () => {
-    toast({
-      title: "Checkout initiated",
-      description: "Your order has been placed successfully!",
-    })
-    clearCart()
-  }
+  const handleCheckout = async () => {
+    if (cart.length === 0) {
+      toast({
+        title: "Checkout failed",
+        description: "Your cart is empty.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!paymentMethod) {
+      toast({
+        title: "Checkout failed",
+        description: "Please select a payment method.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const packages = cart.map((item) => ({
+      packageName: item.name,
+      amount: item.price,
+    }));
+
+    try {
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/create-invitation-code`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ packages, user_id: user.id, paymentMethod }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        toast({
+          title: "Checkout successful",
+          description: `Invitation codes created successfully. Payment method: ${paymentMethod}`,
+        });
+        clearCart();
+        setPaymentMethod('');
+      } else {
+        toast({
+          title: "Checkout failed",
+          description: data.message || "An error occurred.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error('Error during checkout:', error);
+      toast({
+        title: "Checkout failed",
+        description: "An unexpected error occurred.",
+        variant: "destructive",
+      });
+    }
+  };
 
   return (
-    <div className="container max-w-5xl mx-auto px-4 py-8">
+    <div className="container max-w-7xl mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold">Our Products</h1>
+        <h1 className="text-4xl font-bold">Our Products</h1>
       </div>
       <div className="flex flex-col md:flex-row gap-4 mb-6">
         <div className="flex-1">
@@ -255,16 +302,16 @@ function StorePage() {
           </Select>
         </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {loading ? (
-          [...Array(6)].map((_, index) => (
+          [...Array(8)].map((_, index) => (
             <Card key={index} className="animate-pulse">
               <CardHeader>
-                <div className="h-4 bg-gray-300 rounded w-3/4"></div>
+                <div className="h-6 bg-gray-300 rounded w-3/4"></div>
               </CardHeader>
               <CardContent>
-                <div className="h-3 bg-gray-200 rounded w-full mb-2"></div>
-                <div className="h-3 bg-gray-200 rounded w-2/3"></div>
+                <div className="h-4 bg-gray-200 rounded w-full mb-2"></div>
+                <div className="h-4 bg-gray-200 rounded w-2/3"></div>
               </CardContent>
               <CardFooter>
                 <div className="h-10 bg-gray-300 rounded w-full"></div>
@@ -272,17 +319,20 @@ function StorePage() {
             </Card>
           ))
         ) : filteredProducts.map((product) => (
-          <Card key={product.id} className="flex flex-col">
+          <Card key={product.id} className="flex flex-col h-full">
             <CardHeader>
-              <CardTitle>{product.label}</CardTitle>
-              <div>{product.category}</div>
+              <CardTitle className="text-lg">{product.label}</CardTitle>
+              <div className="text-sm text-muted-foreground">{product.category}</div>
             </CardHeader>
             <CardContent className="flex-grow">
               <p className="text-sm mb-4">{product.short_description}</p>
               <p className="text-lg font-bold">₱{product.price.toFixed(2)}</p>
             </CardContent>
             <CardFooter>
-              <Button className="w-full" onClick={() => addToCart({ id: product.id, name: product.label, price: product.price, quantity: 1 })}>
+              <Button 
+                className="w-full" 
+                onClick={() => addToCart({ id: product.id, name: product.label, price: product.price, quantity: 1 })}
+              >
                 <ShoppingCart className="mr-2 h-4 w-4" /> Add to Cart
               </Button>
             </CardFooter>
@@ -303,21 +353,21 @@ function StorePage() {
           <SheetHeader>
             <SheetTitle>Shopping Cart</SheetTitle>
           </SheetHeader>
-          <div>
+          <div className="mt-4 space-y-4">
             {cart.length === 0 ? (
               <p>Your cart is empty.</p>
             ) : (
               cart.map(item => (
-                <div key={item.id} className="flex justify-between items-center mb-4">
+                <div key={item.id} className="flex justify-between items-center py-2 border-b">
                   <div>
-                    <h2 className="text-lg">{item.name}</h2>
-                    <p>₱{item.price.toFixed(2)}</p>
+                    <h2 className="text-lg font-semibold">{item.name}</h2>
+                    <p className="text-sm text-gray-600">₱{item.price.toFixed(2)}</p>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Button size="sm" variant="outline" onClick={() => removeFromCart(item.id)}>
                       <Minus className="h-4 w-4" />
                     </Button>
-                    <span>{item.quantity}</span>
+                    <span className="font-medium">{item.quantity}</span>
                     <Button size="sm" variant="outline" onClick={() => addToCart(item)}>
                       <Plus className="h-4 w-4" />
                     </Button>
@@ -327,11 +377,26 @@ function StorePage() {
             )}
           </div>
           {cart.length > 0 && (
-            <div>
-              <p className="text-right font-bold text-lg mb-4">
+            <div className="mt-6">
+              <p className="text-right font-bold text-xl mb-4">
                 Total: ₱{getCartTotal().toFixed(2)}
               </p>
-              <Button className="w-full" onClick={handleCheckout}>Checkout</Button>
+              <div className="mb-4">
+                <Label htmlFor="paymentMethod">Payment Method</Label>
+                <Select value={paymentMethod} onValueChange={setPaymentMethod}>
+                  <SelectTrigger id="paymentMethod">
+                    <SelectValue placeholder="Select payment method" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="bank">Bank</SelectItem>
+                    <SelectItem value="credits">Credits</SelectItem>
+                    <SelectItem value="gcash">GCASH</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <Button className="w-full" onClick={handleCheckout} disabled={!paymentMethod}>
+                Proceed to Checkout
+              </Button>
             </div>
           )}
         </SheetContent>
@@ -348,3 +413,4 @@ export default function App() {
     </ShoppingCartProvider>
   )
 }
+

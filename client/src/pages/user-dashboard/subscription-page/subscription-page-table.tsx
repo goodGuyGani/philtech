@@ -101,7 +101,7 @@ const SubscriptionPageTable = () => {
     },
     {
       accessorKey: "code",
-      header: "Code",
+      header: "Activation Code",
       cell: ({ row }) => {
         const [isVisible, setIsVisible] = useState(false);
         const codeValue = row.getValue("code") as string;

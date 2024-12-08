@@ -23,6 +23,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Loader } from "lucide-react";
 
 interface UserData {
   user_login: string;
@@ -97,12 +98,21 @@ const SignUp = () => {
         };
       }
 
-      await axiosInstance.post("/api/register-users", userDataToSubmit);
+      // Make the POST request
+      const response = await axiosInstance.post(
+        "/api/register-users",
+        userDataToSubmit
+      );
+
+      // Extract the registered user ID
+      const userId = response.data.ID;
+      console.log(userId);
+      // Success toast and navigation
       toast({
         title: "Success",
         description: "Registration Successful",
       });
-      navigate("/dashboard");
+      navigate(`/user-dashboard/${userId}`);
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error(
@@ -270,9 +280,16 @@ const SignUp = () => {
             <Button
               disabled={!isRecaptchaVerified || isLoading}
               type="submit"
-              className="w-full"
+              className="w-full flex justify-center items-center space-x-2"
             >
-              {isLoading ? "Signing Up..." : "Sign Up"}
+              {isLoading ? (
+                <>
+                  <Loader className="animate-spin text-white" size={24} />
+                  <span>Signing Up...</span>
+                </>
+              ) : (
+                "Sign Up"
+              )}
             </Button>
           </form>
           <div className="mt-4 text-center">
