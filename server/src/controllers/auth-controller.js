@@ -1,8 +1,8 @@
 const { PrismaClient } = require("@prisma/client");
 const Prisma = new PrismaClient();
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
 require("dotenv").config(); // Load environment variables
+const { PasswordHash } = require("phpass"); // Correct import of phpass
 
 const login = async (req, res) => {
   const { email, password } = req.body;
@@ -20,7 +20,11 @@ const login = async (req, res) => {
       return res.status(401).json({ error: "Invalid email or password." });
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.user_pass);
+    // Create a phpass hash instance
+    const hasher = new PasswordHash();
+
+    // Verify the password using phpass's checkPassword method
+    const isPasswordValid = hasher.checkPassword(password, user.user_pass);
 
     if (!isPasswordValid) {
       return res.status(401).json({ error: "Invalid email or password." });

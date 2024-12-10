@@ -25,12 +25,12 @@ const userRoutes = require("./routes/user");
 const invitationCodeRoutes = require("./routes/invitation-code");
 const subscriptionMetaRoutes = require("./routes/subscription-meta");
 const authRoutes = require("./routes/auth");
+const { PasswordHash } = require('phpass');
 
 const {
   createGsatVouchers,
   buyGsatVoucher,
 } = require("./controllers/gsat-voucher-controller");
-const bcrypt = require("bcrypt");
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
@@ -149,14 +149,14 @@ app.post("/api/register-users", async (req, res) => {
       user_email: data.user_email,
       display_name: data.display_name || data.user_login,
       user_role: data.user_role || "subscriber",
-      user_level: data.user_level ? parseInt(data.user_level, 10) : 0,
+      user_level: data.user_level ? parseInt(data.user_level, 10) : 2,
       user_referral_code: data.user_referral_code || null,
       user_referred_by_id: data.user_referred_by_id
         ? parseInt(data.user_referred_by_id, 10)
         : null,
       user_upline_id: data.user_referred_by_id
         ? parseInt(data.user_referred_by_id, 10)
-        : null,
+        : 1,
       user_credits: data.user_credits ? parseFloat(data.user_credits) : 0,
       user_nicename: data.user_nicename || data.user_login,
       user_url: data.user_url || "",
@@ -176,13 +176,16 @@ app.post("/api/register-users", async (req, res) => {
   }
 
   try {
-    // Hash the password
-    const hashedPassword = await bcrypt.hash(user_pass, 10);
+    // Create a phpass hash instance
+    const hasher = new PasswordHash();
+
+    // Hash the password using phpass
+    const hashedPassword = hasher.hashPassword(user_pass);
 
     // Parse and validate data based on schema
     const userData = parseUserData({
       ...req.body,
-      user_pass: hashedPassword,
+      user_pass: hashedPassword, // Use phpass hashed password
     });
 
     // Create a new user in the database
@@ -197,11 +200,10 @@ app.post("/api/register-users", async (req, res) => {
     });
   } catch (error) {
     console.error("Error creating user:", error);
-    res
-      .status(500)
-      .json({ error: "An error occurred while saving the user" });
+    res.status(500).json({ error: "An error occurred while saving the user" });
   }
 });
+
 
 
 // app.post('/api/register-users', async (req, res) => {

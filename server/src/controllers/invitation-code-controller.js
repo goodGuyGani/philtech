@@ -141,10 +141,12 @@ const getInvitationCodeByUserId = async (req, res) => {
       where: { user_id: parseInt(user_id) },
     });
 
+    // Return 200 with an empty array if no invitation codes are found
     if (!invitationCodes || invitationCodes.length === 0) {
-      return res.status(404).json({
-        success: false,
+      return res.status(200).json({
+        success: true,
         message: "No invitation codes found for the given user_id.",
+        data: [],
       });
     }
 
@@ -161,6 +163,7 @@ const getInvitationCodeByUserId = async (req, res) => {
     });
   }
 };
+
 
 
 module.exports = {

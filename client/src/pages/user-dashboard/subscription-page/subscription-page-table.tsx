@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
@@ -72,10 +70,17 @@ const SubscriptionPageTable = () => {
         }/api/invitation-code-by-user-id/${userId}`
       )
       .then((response) => {
-        setSubscriptions(response.data.data);
+        // Check if response data is valid and not empty
+        if (response.data && response.data.data) {
+          setSubscriptions(response.data.data);
+        } else {
+          console.warn("Response data is empty or invalid:", response.data);
+          setSubscriptions([]); // Set an empty array if no data is returned
+        }
       })
       .catch((error) => {
-        console.error(error);
+        console.error("Error fetching data:", error);
+        setSubscriptions([]); // Optionally reset state on error
       });
   }, [userId]);
 
@@ -157,25 +162,31 @@ const SubscriptionPageTable = () => {
       },
     },
     {
-        accessorKey: "redeemed_by",
-        header: "Status",
-        cell: ({ row }) => {
-          const redeemedBy = row.getValue("redeemed_by");
-          return (
-            <div>
-              {redeemedBy === null ? (
-                <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">
-                  Not Activated
-                </Badge>
-              ) : (
-                <Badge variant="secondary" className="bg-green-100 text-green-800">
-                  Activated
-                </Badge>
-              )}
-            </div>
-          );
-        },
+      accessorKey: "redeemed_by",
+      header: "Status",
+      cell: ({ row }) => {
+        const redeemedBy = row.getValue("redeemed_by");
+        return (
+          <div>
+            {redeemedBy === null ? (
+              <Badge
+                variant="secondary"
+                className="bg-yellow-100 text-yellow-800"
+              >
+                Not Activated
+              </Badge>
+            ) : (
+              <Badge
+                variant="secondary"
+                className="bg-green-100 text-green-800"
+              >
+                Activated
+              </Badge>
+            )}
+          </div>
+        );
       },
+    },
     {
       accessorKey: "date_purchased",
       header: "Date Purchased",

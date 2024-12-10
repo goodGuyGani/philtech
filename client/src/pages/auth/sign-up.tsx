@@ -112,7 +112,7 @@ const SignUp = () => {
         title: "Success",
         description: "Registration Successful",
       });
-      navigate(`/user-dashboard/${userId}`);
+      navigate(`/`);
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error(
